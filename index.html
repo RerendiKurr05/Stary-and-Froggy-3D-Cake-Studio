@@ -40,7 +40,10 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--pk);outline-off
 .ic{width:40px;height:40px;padding:0;font-size:17px;display:inline-flex;align-items:center;justify-content:center}
 
 #top{position:fixed;top:0;left:0;right:0;padding:calc(env(safe-area-inset-top,0px) + 10px) 12px 0;display:flex;gap:8px;align-items:center;z-index:10}
-#top .brand{margin-right:auto;font:600 16px "Playfair Display",Georgia,serif}
+#top .brand span.title-text { display: inline; }
+@media (max-width: 640px) {
+  #top .brand span.title-text { display: none; }
+}
 #step{color:var(--pk);font-size:13px}
 
 .panel{position:fixed;left:0;right:0;z-index:12;display:none}
@@ -134,7 +137,7 @@ body[data-mode="intro"] #intro{display:flex}
 
 <!-- Top Overlay Header -->
 <div id="top">
-  <b class="pill brand"><i data-lucide="cake"></i> Stary and Froggy Cake Studio</b>
+<b class="pill brand"><i data-lucide="cake"></i><span class="title-text"> Stary and Froggy Cake Studio</span></b>
   <span class="pill" id="step"></span>
   <button class="pill ic" id="arbtn" aria-label="AR View" title="AR Mode"><i data-lucide="glasses"></i></button>
   <button class="pill ic" id="snd" aria-label="Toggle Sound"><i data-lucide="volume-2"></i></button>
