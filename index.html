@@ -10,6 +10,8 @@
 <meta name="theme-color" content="#0b0f19">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🎂%3C/text%3E%3C/svg%3E">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=Playfair+Display:ital,wght@0,600;1,400&display=swap">
+<!-- Lucide Icon Library -->
+<script src="https://unpkg.com/lucide@latest"></script>
 
 <style>
 :root{
@@ -33,7 +35,7 @@ button{font:inherit;color:inherit;cursor:pointer;border:0;transition:transform .
 button:active{transform:scale(.95)}
 button:focus-visible,input:focus-visible{outline:2px solid var(--pk);outline-offset:2px}
 
-.pill{background:var(--pl);border:1px solid var(--ln);backdrop-filter:blur(12px);padding:9px 15px;border-radius:99px;font-weight:600;white-space:nowrap;box-shadow:0 4px 14px rgba(0,0,0,.25)}
+.pill{background:var(--pl);border:1px solid var(--ln);backdrop-filter:blur(12px);padding:9px 15px;border-radius:99px;font-weight:600;white-space:nowrap;box-shadow:0 4px 14px rgba(0,0,0,.25);display:inline-flex;align-items:center;gap:6px}
 .pill.go,.btn.go{background:linear-gradient(90deg,#ec4899,#f59e0b);border-color:transparent;color:#fff;box-shadow:0 6px 18px rgba(236,72,153,.35)}
 .ic{width:40px;height:40px;padding:0;font-size:17px;display:inline-flex;align-items:center;justify-content:center}
 
@@ -50,7 +52,7 @@ body[data-mode="edit"] #sheet{display:flex;animation:up .4s cubic-bezier(.16,1,.
 #sheet.min #body,#sheet.min #tsel,#sheet.min #save{display:none}
 
 #tabs{display:flex;gap:4px;overflow-x:auto;flex:none;background:var(--ch);padding:4px;border-radius:16px;scrollbar-width:none}
-#tabs button{flex:1;background:none;padding:8px 10px;border-radius:12px;color:var(--mu);font-weight:600;white-space:nowrap}
+#tabs button{flex:1;background:none;padding:8px 10px;border-radius:12px;color:var(--mu);font-weight:600;white-space:nowrap;display:inline-flex;align-items:center;justify-content:center;gap:6px}
 #tabs button.on{background:var(--pl);color:var(--pk);box-shadow:0 2px 8px rgba(0,0,0,.25)}
 
 #tsel{display:flex;gap:6px;align-items:center;margin:8px 0 4px;flex:none;overflow-x:auto}
@@ -69,13 +71,13 @@ h4{margin:12px 0 6px;font-weight:600;color:var(--mu);font-size:12px;text-transfo
 input[type=color]{width:26px;height:26px;border:0;padding:0;background:none;cursor:pointer}
 input[type=text]{width:100%;box-sizing:border-box;padding:10px 12px;border-radius:13px;border:1.5px solid var(--ln);background:var(--ch);color:var(--fg);font:inherit;margin-bottom:6px;user-select:text;-webkit-user-select:text}
 .mu{color:var(--mu);margin:6px 0;font-size:13px}
-#save{margin-top:10px;flex:none;width:100%;padding:12px}
+#save{margin-top:10px;flex:none;width:100%;padding:12px;justify-content:center}
 
 #dock,#meter,#cutui,#after{bottom:0;padding:12px 14px calc(env(safe-area-inset-bottom,0px) + 18px);flex-direction:column;align-items:center;gap:10px}
 body[data-mode="idle"] #dock,body[data-mode="blow"] #meter,body[data-mode="cut"] #cutui,body[data-mode="done"] #after{display:flex;animation:up .45s cubic-bezier(.16,1,.3,1)}
 #dock .row,#after .row,#meter .row{justify-content:center}
 
-.ok{background:rgba(16,185,129,.18);color:#34d399;border:1px solid rgba(52,211,153,.35);padding:6px 14px;border-radius:99px;font-size:13px;font-weight:600}
+.ok{background:rgba(16,185,129,.18);color:#34d399;border:1px solid rgba(52,211,153,.35);padding:6px 14px;border-radius:99px;font-size:13px;font-weight:600;display:inline-flex;align-items:center;gap:6px}
 .big{padding:12px 20px}
 
 #meter .box{width:100%;max-width:360px;background:var(--pl);border:1px solid var(--ln);backdrop-filter:blur(16px);border-radius:22px;padding:14px;box-sizing:border-box;box-shadow:0 12px 32px rgba(0,0,0,.4)}
@@ -87,7 +89,7 @@ body[data-mode="idle"] #dock,body[data-mode="blow"] #meter,body[data-mode="cut"]
 #cutui{top:calc(env(safe-area-inset-top,0px) + 62px);justify-content:space-between;pointer-events:none}
 #cutui button{pointer-events:auto}
 .sw{position:fixed;left:12%;right:12%;top:58%;height:0;border-top:3px dashed #f59e0b;opacity:.8;pointer-events:none}
-.sw i{position:absolute;top:-16px;font-style:normal;font-size:26px;animation:kn 1.8s ease-in-out infinite alternate}
+.sw i{position:absolute;top:-16px;font-style:normal;animation:kn 1.8s ease-in-out infinite alternate}
 @keyframes kn{from{left:0}to{left:calc(100% - 26px)}}
 
 .dlg{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(2,6,15,.78);backdrop-filter:blur(8px);z-index:40;padding:20px}
@@ -119,6 +121,9 @@ body[data-mode="intro"] #intro{display:flex}
 .lid{transform-box:fill-box;transform-origin:center;transition:transform .6s cubic-bezier(.3,1.6,.5,1)}
 #intro.open .lid{transform:translateY(-34px) rotate(-14deg)}
 
+.lucide { stroke-width: 2.25px; width: 18px; height: 18px; display: inline-block; vertical-align: middle; }
+.ic .lucide { width: 20px; height: 20px; }
+
 @media (prefers-reduced-motion:reduce){*{animation:none!important}}
 </style>
 </head>
@@ -129,22 +134,22 @@ body[data-mode="intro"] #intro{display:flex}
 
 <!-- Top Overlay Header -->
 <div id="top">
-  <b class="pill brand">🎂 Stary and Froggy Cake Studio</b>
+  <b class="pill brand"><i data-lucide="cake"></i> Stary and Froggy Cake Studio</b>
   <span class="pill" id="step"></span>
-  <button class="pill ic" id="arbtn" aria-label="AR View" title="AR Mode">👓</button>
-  <button class="pill ic" id="snd" aria-label="Toggle Sound">🔊</button>
-  <button class="pill ic" id="pty" aria-label="Toggle Party Lights">🌙</button>
+  <button class="pill ic" id="arbtn" aria-label="AR View" title="AR Mode"><i data-lucide="glasses"></i></button>
+  <button class="pill ic" id="snd" aria-label="Toggle Sound"><i data-lucide="volume-2"></i></button>
+  <button class="pill ic" id="pty" aria-label="Toggle Party Lights"><i data-lucide="moon"></i></button>
 </div>
 
 <!-- Customizer Drawer Panel -->
 <div id="sheet" class="panel">
   <div id="grab" title="Drag to minimize/expand"></div>
   <nav id="tabs">
-    <button data-t="tiers" class="on">🍰 Tiers</button>
-    <button data-t="frost">🎨 Frosting</button>
-    <button data-t="top">🍓 Toppings</button>
-    <button data-t="candles">🕯️ Candles</button>
-    <button data-t="card">💌 Wish</button>
+    <button data-t="tiers" class="on"><i data-lucide="cake"></i> Tiers</button>
+    <button data-t="frost"><i data-lucide="palette"></i> Frosting</button>
+    <button data-t="top"><i data-lucide="sparkles"></i> Toppings</button>
+    <button data-t="candles"><i data-lucide="flame"></i> Candles</button>
+    <button data-t="card"><i data-lucide="mail"></i> Wish</button>
   </nav>
   <div id="tsel"></div>
   <div id="body">
@@ -159,12 +164,12 @@ body[data-mode="intro"] #intro{display:flex}
 
 <!-- Saved Dock Actions -->
 <div id="dock" class="panel">
-  <div class="ok">✓ Cake saved</div>
+  <div class="ok"><i data-lucide="check"></i> Cake saved</div>
   <div class="row">
-    <button class="pill big" id="d-edit">✏️ Edit</button>
-    <button class="pill big" id="d-prev">▶ Preview</button>
-    <button class="pill big" id="d-ar">👓 AR View</button>
-    <button class="pill go big" id="d-share">🎁 Send as Gift</button>
+    <button class="pill big" id="d-edit"><i data-lucide="pencil"></i> Edit</button>
+    <button class="pill big" id="d-prev"><i data-lucide="play"></i> Preview</button>
+    <button class="pill big" id="d-ar"><i data-lucide="glasses"></i> AR View</button>
+    <button class="pill go big" id="d-share"><i data-lucide="gift"></i> Send as Gift</button>
   </div>
 </div>
 
@@ -179,8 +184,8 @@ body[data-mode="intro"] #intro{display:flex}
     <div id="mbar"><div id="mfill"></div></div>
     <div class="mu" id="left" style="text-align:center;margin:8px 0 0"></div>
     <div class="row" style="margin-top:8px">
-      <button class="pill go" id="mic">🎤 Enable Mic</button>
-      <button class="pill" id="tapb">💨 Tap to Blow</button>
+      <button class="pill go" id="mic"><i data-lucide="mic"></i> Enable Mic</button>
+      <button class="pill" id="tapb"><i data-lucide="wind"></i> Tap to Blow</button>
       <button class="pill" id="mskip">Skip to Cutting</button>
       <button class="pill" id="mexit">Exit Preview</button>
     </div>
@@ -190,7 +195,7 @@ body[data-mode="intro"] #intro{display:flex}
 <!-- Cut Cake Hint Dock -->
 <div id="cutui" class="panel">
   <p class="hint">Swipe across the cake to cut a slice</p>
-  <div class="sw"><i>🔪</i></div>
+  <div class="sw"><i><i data-lucide="utensils-crossed" style="color:#f59e0b"></i></i></div>
   <div class="row">
     <button class="pill go big" id="cutbtn">Cut Now</button>
     <button class="pill big" id="cback">Back</button>
@@ -200,7 +205,7 @@ body[data-mode="intro"] #intro{display:flex}
 <!-- Post-Celebration Replay Dock -->
 <div id="after" class="panel">
   <div class="row">
-    <button class="pill big" id="a-replay">↻ Replay</button>
+    <button class="pill big" id="a-replay"><i data-lucide="rotate-ccw"></i> Replay</button>
     <button class="pill go big" id="a-main">Back to Editing</button>
   </div>
 </div>
@@ -236,7 +241,7 @@ body[data-mode="intro"] #intro{display:flex}
 <!-- Share Gift Link Dialog Modal -->
 <div id="shm" class="dlg" hidden>
   <div class="box">
-    <div class="gift">🎁</div>
+    <div class="gift"><i data-lucide="gift" style="color:#fff;width:32px;height:32px"></i></div>
     <div class="kick">Gift link ready</div>
     <h2 style="font-size:26px">Send this cake</h2>
     <p class="mu" style="margin:0 0 10px">They blow the candles, cut the cake and read your wish. Then they can make a cake of their own.</p>
@@ -445,8 +450,6 @@ function build(){
     k === 'ma' ? mac(x, tierY, z, n) : berry(x, tierY, z);
   });
 
- 
-
   /* 3D Curved Icing Text on Top Tier Surface */
   if(S.tt){
     const topTierIdx=S.t-1, trR=R(topTierIdx), c=document.createElement('canvas');c.width=512;c.height=128;const g=c.getContext('2d');
@@ -630,7 +633,7 @@ function tick(t){requestAnimationFrame(tick);FU.value=t/1000;const dt=Math.min(.
     const held=blow.since?(t-blow.since)/1000:0;tl=blow.since?Math.min(1,held/.4)*(.4+.6*blow.lvl):0;
     if(held>.4&&t-blow.out>(blow.lvl>.7?0:260)){const l=can.filter(c=>c.lit);if(blow.lvl>.7)l.forEach(out);else if(l[0])out(l[0]);blow.out=t}
     blow.pct+=(lvl*100-blow.pct)*.3;meter(Math.round(blow.pct),!blow.an&&t>=blow.fake?'Tap mic to blow':loud&&!air?'That sounds like voice. Blow air':lvl>0?'Blowing!':'Listening…');
-    const lf=can.filter(c=>c.lit).length+' of '+can.length+' candles lit';if(lf!==blow.left){blow.left=lf;$('#left').textContent='🕯️ '+lf}}
+    const lf=can.filter(c=>c.lit).length+' of '+can.length+' candles lit';if(lf!==blow.left){blow.left=lf;$('#left').innerHTML='<i data-lucide="flame"></i> '+lf; if(window.lucide) lucide.createIcons();}}
   blow.lean+=(tl-blow.lean)*.15;
   
   const dir=new V(-Math.sin(th),0,-Math.cos(th));let lit=0;
@@ -719,18 +722,19 @@ async function launchAR(){
 
 /* Drawer Panels Initialization & Event Delegation */
 const ch=(k,v,l)=>`<button class="chip" data-k="${k}" data-v="${v}">${l}</button>`;
-$('#p-tiers').innerHTML=`<h4>How many layers?</h4><div class="row">${[1,2,3].map(n=>ch('t',n,n+(n>1?' layers':' layer'))).join('')}</div><h4>Shape of the selected tier</h4><div class="row">${[['round','⚪ Round'],['square','⬜ Square'],['hex','⬡ Hexagon'],['heart','❤️ Heart']].map(a=>ch('s',...a)).join('')}</div>`;
+$('#p-tiers').innerHTML=`<h4>How many layers?</h4><div class="row">${[1,2,3].map(n=>ch('t',n,n+(n>1?' layers':' layer'))).join('')}</div><h4>Shape of the selected tier</h4><div class="row">${[['round','<i data-lucide="circle"></i> Round'],['square','<i data-lucide="square"></i> Square'],['hex','<i data-lucide="hexagon"></i> Hexagon'],['heart','<i data-lucide="heart"></i> Heart']].map(a=>ch('s',...a)).join('')}</div>`;
 $('#p-frost').innerHTML=`<h4>Flavor and style</h4><div class="row">${Object.entries(FL).map(([k,p])=>`<button class="chip" data-p="${k}"><i class="dot" style="background:${p[1]}"></i>${p[0]}</button>`).join('')}</div><h4>Colors</h4><div class="row"><label class="chip">Frosting <input type="color" id="cc"></label><label class="chip">Trim and pearls <input type="color" id="xc"></label></div><h4>Finish</h4><div class="row">${[['satin','Satin buttercream'],['mirror','Mirror glaze'],['velvet','Velvet'],['fondant','Fondant']].map(a=>ch('f',...a)).join('')}</div>`;
-$('#p-top').innerHTML=`<h4>Piping border (follows tier edge)</h4><div class="row">${[['none','None'],['pearl','Pearls'],['shell','Shells'],['rosette','Rosettes'],['ruffle','Ruffles']].map(a=>ch('pi',...a)).join('')}</div><h4>Scatter on selected tier</h4><div class="row">${ch('sp','tg','✨ Sprinkles')}${ch('be','tg','🍓 Berries')}${ch('ma','tg','🍬 Macarons')}${ch('gl','tg','💫 Glitter')}</div><h4>Or tap any tier to place</h4><div class="row">${ch('pt','ma','🍬 Macaron')}${ch('pt','be','🍓 Berry')}<button class="chip" id="clx">Clear placed</button></div>`;
-$('#p-candles').innerHTML=`<h4>Candle type</h4><div class="row">${[['taper','Taper'],['trick','Trick (relights)'],['spark','Sparkler'],['num','Numeral']].map(a=>ch('ct',...a)).join('')}</div><div class="row" style="margin-top:8px"><label class="chip">Age <input type="text" id="ag" maxlength="2" inputmode="numeric" style="width:46px;margin:0;padding:4px 6px"></label><label class="chip">Color <input type="color" id="kc"></label><button class="chip" id="undo">↩ Undo</button><button class="chip" id="rst">Reset</button></div><p class="mu">Tap any tier surface to add the chosen candle. Tap a candle to remove it.</p>`;
-$('#p-card').innerHTML=`<h4>Who is it for?</h4><input type="text" id="nm" maxlength="40" placeholder="Name"><h4>From</h4><input type="text" id="fr" maxlength="40" placeholder="Your name"><h4>Writing on the cake board</h4><input type="text" id="bt" maxlength="24" placeholder="Happy Birthday"><h4>Curved tier 3D icing text</h4><input type="text" id="tt" maxlength="20" placeholder="e.g. Sweet 16"><h4>Wish message</h4><input type="text" id="msg" maxlength="140" placeholder="Write a birthday wish"><h4>Photo memory</h4><div class="row"><label class="chip">📷 Add photo<input type="file" id="file" accept="image/*" hidden></label><button class="chip" id="noimg">Remove photo</button></div><h4>Video memory note</h4><div class="row"><label class="chip">🎥 Add video<input type="file" id="vfile" accept="video/*" hidden></label><button class="chip" id="novid">Remove video</button></div><p class="mu">Media files are embedded inside your shareable gift link.</p>`;
+$('#p-top').innerHTML=`<h4>Piping border (follows tier edge)</h4><div class="row">${[['none','None'],['pearl','Pearls'],['shell','Shells'],['rosette','Rosettes'],['ruffle','Ruffles']].map(a=>ch('pi',...a)).join('')}</div><h4>Scatter on selected tier</h4><div class="row">${ch('sp','tg','<i data-lucide="sparkles"></i> Sprinkles')}${ch('be','tg','<i data-lucide="cherry"></i> Berries')}${ch('ma','tg','<i data-lucide="cookie"></i> Macarons')}${ch('gl','tg','<i data-lucide="stars"></i> Glitter')}</div><h4>Or tap any tier to place</h4><div class="row">${ch('pt','ma','<i data-lucide="cookie"></i> Macaron')}${ch('pt','be','<i data-lucide="cherry"></i> Berry')}<button class="chip" id="clx">Clear placed</button></div>`;
+$('#p-candles').innerHTML=`<h4>Candle type</h4><div class="row">${[['taper','Taper'],['trick','Trick (relights)'],['spark','Sparkler'],['num','Numeral']].map(a=>ch('ct',...a)).join('')}</div><div class="row" style="margin-top:8px"><label class="chip">Age <input type="text" id="ag" maxlength="2" inputmode="numeric" style="width:46px;margin:0;padding:4px 6px"></label><label class="chip">Color <input type="color" id="kc"></label><button class="chip" id="undo"><i data-lucide="undo"></i> Undo</button><button class="chip" id="rst">Reset</button></div><p class="mu">Tap any tier surface to add the chosen candle. Tap a candle to remove it.</p>`;
+$('#p-card').innerHTML=`<h4>Who is it for?</h4><input type="text" id="nm" maxlength="40" placeholder="Name"><h4>From</h4><input type="text" id="fr" maxlength="40" placeholder="Your name"><h4>Writing on the cake board</h4><input type="text" id="bt" maxlength="24" placeholder="Happy Birthday"><h4>Curved tier 3D icing text</h4><input type="text" id="tt" maxlength="20" placeholder="e.g. Sweet 16"><h4>Wish message</h4><input type="text" id="msg" maxlength="140" placeholder="Write a birthday wish"><h4>Photo memory</h4><div class="row"><label class="chip"><i data-lucide="camera"></i> Add photo<input type="file" id="file" accept="image/*" hidden></label><button class="chip" id="noimg">Remove photo</button></div><h4>Video memory note</h4><div class="row"><label class="chip"><i data-lucide="video"></i> Add video<input type="file" id="vfile" accept="video/*" hidden></label><button class="chip" id="novid">Remove video</button></div><p class="mu">Media files are embedded inside your shareable gift link.</p>`;
 
 const NM=()=>({1:['Cake'],2:['Bottom','Top'],3:['Bottom','Middle','Top']})[S.t];
 function sync(){
   const t=S.tr[S.e=Math.min(S.e,S.t-1)];
   $('#tsel').innerHTML='<span>Editing</span>'+NM().map((n,i)=>`<button class="chip${i===S.e?' on':''}" data-e="${i}"><i class="dot" style="background:${S.tr[i].c}"></i>${n}</button>`).join('')+`<button class="chip${all?' on':''}" id="all">All tiers</button>`;
   $$('[data-k]').forEach(b=>{const k=b.dataset.k,v=b.dataset.v,cur=k==='t'?S.t:k==='ct'?S.ct:k==='pt'?S.pt:t[k];b.classList.toggle('on',v==='tg'?!!cur:String(cur)===v)});
-  $('#cc').value=t.c;$('#xc').value=t.x;$('#kc').value=S.ck;$('#nm').value=S.n;$('#msg').value=S.m;$('#noimg').hidden=!S.im;$('#novid').hidden=!S.vd;$('#fr').value=S.f||'';$('#bt').value=S.bt||'';$('#tt').value=S.tt||'';$('#ag').value=S.ag
+  $('#cc').value=t.c;$('#xc').value=t.x;$('#kc').value=S.ck;$('#nm').value=S.n;$('#msg').value=S.m;$('#noimg').hidden=!S.im;$('#novid').hidden=!S.vd;$('#fr').value=S.f||'';$('#bt').value=S.bt||'';$('#tt').value=S.tt||'';$('#ag').value=S.ag;
+  if(window.lucide) lucide.createIcons();
 }
 
 const setT=(k,v)=>(all?S.tr.slice(0,S.t):[S.tr[S.e]]).forEach(t=>t[k]=v);
@@ -777,7 +781,7 @@ $('#rst').onclick=()=>{S.k=dc();rb()};
 $('#tabs').onclick=e=>{const b=e.target.closest('[data-t]');if(!b)return;tab=b.dataset.t;$$('#tabs button').forEach(x=>x.classList.toggle('on',x===b));$$('.pane').forEach(p=>p.classList.toggle('on',p.id==='p-'+tab));$('#sheet').classList.remove('min');$('#tsel').hidden=tab==='candles'||tab==='card'};
 $('#grab').onclick=()=>$('#sheet').classList.toggle('min');
 $('#save').onclick=()=>{toast(save()?'Cake saved':'Saved in preview mode');snd('sparkle');setMode('idle')};
-$('#snd').onclick=()=>{snOn=!snOn;$('#snd').textContent=snOn?'🔊':'🔇'};
+$('#snd').onclick=()=>{snOn=!snOn;$('#snd').innerHTML=snOn?'<i data-lucide="volume-2"></i>':'<i data-lucide="volume-x"></i>'; if(window.lucide) lucide.createIcons();};
 $('#pty').onclick=()=>document.body.classList.toggle('party');
 if($('#arbtn')) $('#arbtn').onclick=launchAR;
 if($('#d-ar')) $('#d-ar').onclick=launchAR;
@@ -825,6 +829,8 @@ async function boot(){
       if(S.bt||S.tt) build();
     });
   }
+  if(window.lucide) lucide.createIcons();
+
 /* Safe Link Generator with Auto-Shortener */
 const link = async () => {
   const o = Object.assign({}, S);
@@ -861,7 +867,8 @@ $('#d-share').onclick = async () => {
   $('#shm').hidden = false;
   
   $('#d-share').disabled = false;
-  $('#d-share').textContent = '🎁 Send as Gift';
+  $('#d-share').innerHTML = '<i data-lucide="gift"></i> Send as Gift';
+  if(window.lucide) lucide.createIcons();
   snd('sparkle');
 };
 
