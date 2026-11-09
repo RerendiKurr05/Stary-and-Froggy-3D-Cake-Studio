@@ -39,7 +39,31 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--pk);outline-off
 .pill.go,.btn.go{background:linear-gradient(90deg,#ec4899,#f59e0b);border-color:transparent;color:#fff;box-shadow:0 6px 18px rgba(236,72,153,.35)}
 .ic{width:40px;height:40px;padding:0;font-size:17px;display:inline-flex;align-items:center;justify-content:center}
 
-#top{position:fixed;top:0;left:0;right:0;padding:calc(env(safe-area-inset-top,0px) + 10px) 12px 0;display:flex;gap:8px;align-items:center;z-index:10}
+#top {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: calc(env(safe-area-inset-top, 0px) + 10px) 12px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Pushes brand to left, controls group to right */
+  z-index: 10;
+}
+
+/* Remove margin-right auto from brand */
+#top .brand {
+  margin-right: 0;
+  font: 600 16px "Playfair Display", Georgia, serif;
+}
+
+/* Container for all top-right controls */
+#top .top-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 #top .brand span.title-text { display: inline; }
 @media (max-width: 640px) {
   #top .brand span.title-text { display: none; }
@@ -137,11 +161,16 @@ body[data-mode="intro"] #intro{display:flex}
 
 <!-- Top Overlay Header -->
 <div id="top">
-<b class="pill brand"><i data-lucide="cake"></i><span class="title-text"> Stary and Froggy Cake Studio</span></b>
-  <span class="pill" id="step"></span>
-  <button class="pill ic" id="arbtn" aria-label="AR View" title="AR Mode"><i data-lucide="glasses"></i></button>
-  <button class="pill ic" id="snd" aria-label="Toggle Sound"><i data-lucide="volume-2"></i></button>
-  <button class="pill ic" id="pty" aria-label="Toggle Party Lights"><i data-lucide="moon"></i></button>
+  <b class="pill brand">
+    <i data-lucide="cake"></i><span class="title-text"> Stary and Froggy Cake Studio</span>
+  </b>
+  
+  <div class="top-controls">
+    <span class="pill" id="step"></span>
+    <button class="pill ic" id="arbtn" aria-label="AR View" title="AR Mode"><i data-lucide="glasses"></i></button>
+    <button class="pill ic" id="snd" aria-label="Toggle Sound"><i data-lucide="volume-2"></i></button>
+    <button class="pill ic" id="pty" aria-label="Toggle Party Lights"><i data-lucide="moon"></i></button>
+  </div>
 </div>
 
 <!-- Customizer Drawer Panel -->
