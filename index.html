@@ -47,6 +47,7 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--pk);outline-off
   display: flex;
   align-items: center;
   justify-content: space-between;
+  z-index: 20;
 }
 #top .brand {
   margin-right: 0;
@@ -160,7 +161,7 @@ body[data-mode="intro"] #intro{display:flex}
   
   <div class="top-controls">
     <span class="pill" id="step"></span>
-    <button class="pill ic" id="arbtn" aria-label="AR View" title="AR Mode"><i data-lucide="glasses"></i></button>
+    <button class="pill ic" id="arbtn" aria-label="Toggle AR View" title="Toggle AR Mode"><i data-lucide="glasses"></i></button>
     <button class="pill ic" id="snd" aria-label="Toggle Sound"><i data-lucide="volume-2"></i></button>
     <button class="pill ic" id="pty" aria-label="Toggle Party Lights"><i data-lucide="moon"></i></button>
   </div>
@@ -373,6 +374,8 @@ function burst(){if(typeof confetti!=='function')return;const f=(r,o)=>confetti(
 
 const cv=$('#c'),ren=new T.WebGLRenderer({canvas:cv,antialias:true,alpha:true});
 ren.setPixelRatio(Math.min(devicePixelRatio||1,2));
+ren.xr.enabled = false; // Defaulted to off as requested
+
 const sc=new T.Scene(),cam=new T.PerspectiveCamera(48,1,.1,60);
 const amb=new T.AmbientLight(0xffffff,.6),dl=new T.DirectionalLight(0xffffff,.8),pl=new T.PointLight(0xffa040,0,6);
 dl.position.set(3,6,4);sc.add(amb,dl,pl);
@@ -655,7 +658,9 @@ function swipe(px,py){can.forEach(c=>{if(!c.lit)return;const v=new V(c.x,S.t*H+c
 function meter(p,t){if(t!==blow.txt){$('#mtxt').textContent=t;blow.txt=t}$('#mfill').style.width=p+'%';$('#mpct').textContent=p+'%'}
 
 let last=0;
-function tick(t){requestAnimationFrame(tick);FU.value=t/1000;const dt=Math.min(.05,(t-last)/1000||0);last=t;let tl=0;
+function tick(t, frame){
+  FU.value=t/1000;
+  const dt=Math.min(.05,(t-last)/1000||0);last=t;let tl=0;
   if(mode==='blow'&&!fin){let rms=0;
     if(blow.an){blow.an.getFloatTimeDomainData(buf);let s=0;for(const v of buf)s+=v*v;rms=Math.sqrt(s/buf.length);
       blow.an.getFloatFrequencyData(fd);let sp=0,lg=0;for(let i=14;i<42;i++){const p=Math.pow(10,fd[i]/10)+1e-12;sp+=p;lg+=Math.log(p)}
@@ -694,7 +699,11 @@ function tick(t){requestAnimationFrame(tick);FU.value=t/1000;const dt=Math.min(.
     else{if(cut.p<1){cut.p=1;sc.remove(s);plate.add(s);s.position.set(0,.07,-.4);s.scale.setScalar(.55);snd('spin');burst()}
       const k=clamp((e-1600)/3000,0,1);plate.rotation.y=ease(k)*PI2*2;
       if(k>=1&&cut.p<2){cut.p=2;showCard()}}}
-  cm();ren.render(sc,cam)}
+  cm();
+  ren.render(sc,cam);
+}
+
+ren.setAnimationLoop(tick);
   
 const STEP={intro:'A gift',edit:'Design',idle:'Saved',blow:'Make a wish',cut:'Cut the cake',cutting:'Serving…',done:'Enjoy!'};
 function setMode(m){mode=m;document.body.dataset.mode=m;document.body.classList.toggle('party',/intro|blow|cut|done/.test(m));$('#step').textContent=STEP[m];
@@ -797,88 +806,67 @@ async function shortenUrl(longUrl) {
 async function copyTxt(s,msg){try{await navigator.clipboard.writeText(s)}catch(e){const i=$('#lnk');i.value=s;i.select();try{document.execCommand('copy')}catch(x){}}toast(msg);snd('sparkle')}
 function mine(){view=false;prev=false;try{history.replaceState(null,'',location.pathname+location.search)}catch(e){}S.n='';S.f='';S.bt='';S.tt='';S.m='Make a wish!';S.im='';S.vd='';S.e=0;rb();sync();setMode('edit');toast('Make it yours, then save and send')}
 
-async function launchAR() {
-  if (navigator.xr) {
-    try {
-      const supported = await navigator.xr.isSessionSupported('immersive-ar');
-      if (supported) {
-        ren.xr.enabled = true;
-        const session = await navigator.xr.requestSession('immersive-ar', {
-          requiredFeatures: ['hit-test', 'local-floor']
-        });
-        ren.xr.setSession(session);
-        toast('AR Mode Active! Point camera at table/floor and tap to place.');
-
-        let hitTestSource = null;
-        let hitTestSourceRequested = false;
-        
-        const reticle = new T.Mesh(
-          new T.RingGeometry(0.15, 0.2, 32).rotateX(-Math.PI / 2),
-          new T.MeshBasicMaterial({ color: 0xffffff })
-        );
-        reticle.matrixAutoUpdate = false;
-        reticle.visible = false;
-        sc.add(reticle);
-
-        const controller = ren.xr.getController(0);
-        controller.addEventListener('select', () => {
-          if (reticle.visible) {
-            reticle.matrix.decompose(cake.position, cake.quaternion, cake.scale);
-            cake.visible = true;
-            toast('Cake placed in room!');
-            snd('sparkle');
-            burst();
-          }
-        });
-        sc.add(controller);
-
-        session.addEventListener('end', () => {
-          hitTestSourceRequested = false;
-          hitTestSource = null;
-          reticle.visible = false;
-          sc.remove(reticle);
-          sc.remove(controller);
-        });
-
-        ren.setAnimationLoop((timestamp, frame) => {
-          if (frame) {
-            const referenceSpace = ren.xr.getReferenceSpace();
-            const session = ren.xr.getSession();
-
-            if (!hitTestSourceRequested) {
-              session.requestReferenceSpace('viewer').then((viewerSpace) => {
-                session.requestHitTestSource({ space: viewerSpace }).then((source) => {
-                  hitTestSource = source;
-                });
-              });
-              hitTestSourceRequested = true;
-            }
-
-            if (hitTestSource) {
-              const hitTestResults = frame.getHitTestResults(hitTestSource);
-              if (hitTestResults.length > 0) {
-                const hit = hitTestResults[0];
-                reticle.visible = true;
-                reticle.matrix.fromArray(hit.getPose(referenceSpace).transform.matrix);
-              } else {
-                reticle.visible = false;
-              }
-            }
-          }
-          ren.render(sc, cam);
-        });
-        return;
-      }
-    } catch (e) {
-      console.warn("WebXR session failed, falling back to 3D view", e);
-    }
+let arSession = null;
+async function toggleAR() {
+  if (!navigator.xr) {
+    toast('WebXR not supported on this device/browser');
+    return;
   }
+  if (arSession) {
+    await arSession.end();
+    return;
+  }
+  try {
+    const supported = await navigator.xr.isSessionSupported('immersive-ar');
+    if (!supported) {
+      toast('Immersive AR mode is not supported');
+      return;
+    }
+    const session = await navigator.xr.requestSession('immersive-ar', {
+      requiredFeatures: ['hit-test', 'local-floor']
+    });
+    arSession = session;
+    ren.xr.enabled = true;
+    ren.xr.setSession(session);
+    toast('AR Mode Active! Point camera at surface and tap to place.');
 
-  th = 0;
-  ph = 1.25;
-  zm = .85;
-  toast('3D Camera aligned for AR presentation!');
-  snd('sparkle');
+    let hitTestSource = null;
+    let hitTestSourceRequested = false;
+    
+    const reticle = new T.Mesh(
+      new T.RingGeometry(0.15, 0.2, 32).rotateX(-Math.PI / 2),
+      new T.MeshBasicMaterial({ color: 0xffffff })
+    );
+    reticle.matrixAutoUpdate = false;
+    reticle.visible = false;
+    sc.add(reticle);
+
+    const controller = ren.xr.getController(0);
+    controller.addEventListener('select', () => {
+      if (reticle.visible) {
+        reticle.matrix.decompose(cake.position, cake.quaternion, cake.scale);
+        cake.visible = true;
+        toast('Cake placed in room!');
+        snd('sparkle');
+        burst();
+      }
+    });
+    sc.add(controller);
+
+    session.addEventListener('end', () => {
+      arSession = null;
+      ren.xr.enabled = false;
+      hitTestSourceRequested = false;
+      hitTestSource = null;
+      reticle.visible = false;
+      sc.remove(reticle);
+      sc.remove(controller);
+      toast('Exited AR mode');
+    });
+  } catch (e) {
+    console.warn("AR session error", e);
+    toast('Could not start AR session');
+  }
 }
 
 /* Drawer Panels Initialization & Event Delegation */
@@ -976,8 +964,8 @@ $('#grab').onclick=()=>$('#sheet').classList.toggle('min');
 $('#save').onclick=()=>{toast(save()?'Cake saved':'Saved in preview mode');snd('sparkle');setMode('idle')};
 $('#snd').onclick=()=>{snOn=!snOn;$('#snd').innerHTML=snOn?'<i data-lucide="volume-2"></i>':'<i data-lucide="volume-x"></i>'; if(window.lucide) lucide.createIcons();};
 $('#pty').onclick=()=>document.body.classList.toggle('party');
-if($('#arbtn')) $('#arbtn').onclick=launchAR;
-if($('#d-ar')) $('#d-ar').onclick=launchAR;
+if($('#arbtn')) $('#arbtn').onclick=toggleAR;
+if($('#d-ar')) $('#d-ar').onclick=toggleAR;
 $('#d-edit').onclick=()=>setMode('edit');
 $('#d-prev').onclick=()=>{prev=true;setMode('intro')};
 $('#unwrap').onclick=()=>{A();$('#intro').classList.add('open');snd('sparkle');vib(20);if(typeof confetti==='function')confetti({particleCount:60,spread:70,origin:{y:.6},zIndex:60});startMic();music(true);setTimeout(()=>setMode('blow'),800)};
@@ -1035,7 +1023,6 @@ async function boot(){
   build();
   sync();
   setMode(view?'intro':(saved?'idle':'edit'));
-  requestAnimationFrame(tick);
   
   if(document.fonts&&document.fonts.ready){
     document.fonts.ready.then(()=>{
