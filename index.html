@@ -538,7 +538,7 @@ function mkSlice(){
     m.position.y=i*H;
     g.add(m,face(o,WC+WA/2,i,1),face(o,WC-WA/2,i,-1));
 
-    const rnd=rng(7+i), r=R(i), ru=i<S.t-1?R(i+1):0, y=i*H+H/2;
+    const rnd=rng(7+i), r=R(i), y=i*H+H/2;
     const spc=['#ff4f8b','#ffd23f','#4df3ff','#7cff6b','#ffffff'].map(c=>new T.MeshStandardMaterial({color:c,roughness:.5}));
     
     if(t.sp){
@@ -1017,6 +1017,7 @@ $('#copy').onclick=()=>copyTxt('Happy Birthday'+(S.n?', '+S.n:'')+'! '+S.m,'Wish
 $('#a-replay').onclick=()=>setMode('blow');
 $('#a-main').onclick=()=>view?mine():(prev=false,setMode('edit'));
 
+/* Application Bootstrapping */
 async function boot(){
   try{
     const raw=safeGetStorage('cake');
