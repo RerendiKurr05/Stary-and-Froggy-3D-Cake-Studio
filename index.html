@@ -71,7 +71,7 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--pk);outline-off
 body[data-mode="edit"] #sheet{display:flex;animation:up .4s cubic-bezier(.16,1,.3,1)}
 @keyframes up{from{transform:translateY(40%);opacity:0}}
 
-#grab{width:46px;height:5px;background:var(--ln);border-radius:9px;margin:0 auto 8px;flex:none;cursor:pointer}
+#grab{width:46px;height:5px;background:var(--ln);border-radius:99px;margin:0 auto 8px;flex:none;cursor:pointer}
 #sheet.min #body,#sheet.min #tsel,#sheet.min #save{display:none}
 
 #tabs{display:flex;gap:4px;overflow-x:auto;flex:none;background:var(--ch);padding:4px;border-radius:16px;scrollbar-width:none}
@@ -343,7 +343,7 @@ async function pz(u,C){const z=new C('deflate-raw'),w=z.writable.getWriter();w.w
 async function enc(o){const j=new TextEncoder().encode(JSON.stringify(o));try{return 'cake2-'+b64(await pz(j,CompressionStream))}catch(e){return 'cake-'+b64(j)}}
 async function dec(h){h=h.slice(1);const d=new TextDecoder();return JSON.parse(d.decode(h.startsWith('cake2-')?await pz(unb(h.slice(6)),DecompressionStream):unb(h.slice(5))))}
 
-let S={t:2,e:0,tr:[mk(),mk({c:'#f4b6c2',x:'#fff1de'}),mk()],k:[],ck:'#ffffff',n:'',f:'',bt:'',tt:'',ex:[],ct:'taper',ag:'5',pt:'',m:'Make a wish!',im:'',vd:''},view=/^#cake2?-/.test(location.hash),saved=false,all=false,prev=false,mode='edit',tab='tiers',cutOn=false,pulse=0;
+let S={t:2,e:0,tr:[mk(),mk({c:'#f4b6c2',x:'#fff1de'}),mk()],k:[],ck:'#ffffff',n:'',f:'',bt:'',tt:'',ex:[],ct:'taper',ag:'5',pt:'',m:'Make a wish!',im:'',vd:''},view=/^#cake2?-/.test(location.hash),saved=false,all=false,prev=false,mode='edit',tab='tiers',cutOn=false,pulse=0,cut=null;
 const dc=()=>{const r=R(S.t-1);return [[0,-r*.35],[-r*.35,r*.25],[r*.35,r*.25]].map(a=>[...a.map(v=>+v.toFixed(2)),'taper',''])};
 S.k=dc();
 
@@ -373,8 +373,8 @@ function music(on){if(on&&!mOn){mOn=true;mI=0;(function ph(){if(!mOn)return;let 
 function burst(){if(typeof confetti!=='function')return;const f=(r,o)=>confetti(Object.assign({origin:{y:.65},zIndex:60},o,{particleCount:Math.floor(220*r)}));f(.25,{spread:26,startVelocity:55});f(.2,{spread:60});f(.35,{spread:100,decay:.91,scalar:.8});f(.1,{spread:120,startVelocity:25,decay:.92,scalar:1.2});f(.1,{spread:120,startVelocity:45})}
 
 const cv=$('#c'),ren=new T.WebGLRenderer({canvas:cv,antialias:true,alpha:true});
-ren.setPixelRatio(Math.min(devicePixelRatio||1,2));
-ren.xr.enabled = false; // Defaulted to off as requested
+ren.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
+ren.xr.enabled = false;
 
 const sc=new T.Scene(),cam=new T.PerspectiveCamera(48,1,.1,60);
 const amb=new T.AmbientLight(0xffffff,.6),dl=new T.DirectionalLight(0xffffff,.8),pl=new T.PointLight(0xffa040,0,6);
@@ -413,7 +413,8 @@ function spark(c){
   s.userData={a:0,v:new V((Math.random()-.5)*.9,.3+Math.random()*.8,(Math.random()-.5)*.9)};
   sc.add(s);spk.push(s);
 }
-function pipe(st,o,y,col,ro){if(!st||st==='none')return;const pm=new T.MeshStandardMaterial({color:col,roughness:.3,metalness:.15,envMap:ENV,envMapIntensity:.9}),N={pearl:30,shell:34,rosette:16,ruffle:48}[st];
+
+function pipe(st,o,y,col,ro){if(!st||st==='none')return;const pm=new T.MeshStandardMaterial({color:col,roughness:.3,metalness:.15,envMap:ENV,envMapIntensity:.9}),N={pearl:30,shell:34,rosette:16,ruffle:48}[st]||30;
   for(let a=0;a<N;a++){const q=a/N*PI2,rr=rho(o,q)+ro,x=Math.cos(q)*rr,z=Math.sin(q)*rr;if(inW(x,z))continue;let m;
     if(st==='pearl')m=new T.Mesh(new T.SphereGeometry(.07,12,8),pm);
     else if(st==='shell'){m=new T.Mesh(new T.SphereGeometry(.075,12,8),pm);m.scale.set(1.9,.7,1);m.rotation.y=-q-Math.PI/2}
@@ -436,7 +437,7 @@ function geo(s,r){
 
 const NS=120;
 function outline(m,y){const rc=new T.Raycaster(),o=[];for(let i=0;i<NS;i++){const q=i/NS*PI2,c=Math.cos(q),s=Math.sin(q);rc.set(new V(c*6,y,s*6),new V(-c,0,-s));const h=rc.intersectObject(m)[0];o.push(h?6-h.distance:1)}return o}
-const rho=(o,q)=>{q=((q%PI2)+PI2)%PI2;const f=q/PI2*NS,i=Math.floor(f)%NS,k=f-Math.floor(f);return o[i]*(1-k)+o[(i+1)%NS]*k};
+const rho=(o,q)=>{if(!o||!o.length)return 1;q=((q%PI2)+PI2)%PI2;const f=q/PI2*NS,i=Math.floor(f)%NS,k=f-Math.floor(f);return o[i]*(1-k)+o[(i+1)%NS]*k};
 function arc(o,a,b){const p=[],n=Math.max(2,Math.ceil((b-a)/PI2*NS));for(let j=0;j<=n;j++){const q=a+(b-a)*j/n,r=rho(o,q);p.push([r*Math.cos(q),r*Math.sin(q)])}return p}
 function ext(pts){const sh=new T.Shape();pts.forEach(([x,z],i)=>i?sh.lineTo(x,-z):sh.moveTo(x,-z));const g=new T.ExtrudeGeometry(sh,{depth:H,bevelEnabled:false});g.rotateX(-Math.PI/2);return g}
 function face(o,q,i,sg){const r=rho(o,q),c=Math.cos(q),s=Math.sin(q),ox=-s*sg*.004,oz=c*sg*.004,y0=i*H,y1=y0+H,g=new T.BufferGeometry();
@@ -561,12 +562,17 @@ function resetCut(){if(cut){plate.remove(cut.s);sc.remove(cut.s);cut=null}plate.
   
 let th=.5,ph=1.15,zm=1,cp=0;
 const ds=()=>clamp(4.9/(2*Math.tan(.4189)*(cam.aspect||1)),7,15)*zm;
-function cm(){const ty=(.35*S.t+.35)*(1-cp)+.8*cp,d=ds()*(1-.28*cp);cam.position.set(d*Math.sin(ph)*Math.sin(th),ty+d*Math.cos(ph),d*Math.sin(ph)*Math.cos(th));cam.lookAt(0,ty,0)}
+function cm(){
+  const ty=(.35*S.t+.35)*(1-cp)+.8*cp,d=ds()*(1-.28*cp);
+  cam.position.set(d*Math.sin(ph)*Math.sin(th),ty+d*Math.cos(ph),d*Math.sin(ph)*Math.cos(th));
+  cam.lookAt(0,ty,0);
+}
 function rs(){
-  const w=innerWidth||window.innerWidth||360,h=innerHeight||window.innerHeight||640;
+  const w=window.innerWidth||360, h=window.innerHeight||640;
   ren.setSize(w,h,false);
   cam.aspect=w/(h||1);
-  cam.setViewOffset(w,h,0,Math.round(h*(mode==='edit'?.17:/cut|done/.test(mode)?.02:.07)),w,h);
+  cam.clearViewOffset();
+  cam.setViewOffset(w,h,0,Math.round(h*(mode==='edit'?.12:/cut|done/.test(mode)?.02:.05)),w,h);
   cam.updateProjectionMatrix();
 }
 addEventListener('resize',rs);
@@ -584,7 +590,7 @@ cv.addEventListener('dblclick',()=>{th=.5;ph=1.15;zm=1});
 
 function tap(x,y,tb){
   const rc=new T.Raycaster();
-  rc.setFromCamera(new T.Vector2(x/innerWidth*2-1,-y/innerHeight*2+1),cam);
+  rc.setFromCamera(new T.Vector2(x/window.innerWidth*2-1,-y/window.innerHeight*2+1),cam);
 
   if(tb==='top'){
     const h=rc.intersectObjects(tops)[0];
@@ -654,7 +660,7 @@ function out(c){
   }
 }
 
-function swipe(px,py){can.forEach(c=>{if(!c.lit)return;const v=new V(c.x,S.t*H+c.hy,c.z).project(cam);if(Math.hypot((v.x+1)/2*innerWidth-px,(1-v.y)/2*innerHeight-py)<40)out(c)})}
+function swipe(px,py){can.forEach(c=>{if(!c.lit)return;const v=new V(c.x,S.t*H+c.hy,c.z).project(cam);if(Math.hypot((v.x+1)/2*window.innerWidth-px,(1-v.y)/2*window.innerHeight-py)<40)out(c)})}
 function meter(p,t){if(t!==blow.txt){$('#mtxt').textContent=t;blow.txt=t}$('#mfill').style.width=p+'%';$('#mpct').textContent=p+'%'}
 
 let last=0;
@@ -702,8 +708,6 @@ function tick(t, frame){
   cm();
   ren.render(sc,cam);
 }
-
-ren.setAnimationLoop(tick);
   
 const STEP={intro:'A gift',edit:'Design',idle:'Saved',blow:'Make a wish',cut:'Cut the cake',cutting:'Serving…',done:'Enjoy!'};
 function setMode(m){mode=m;document.body.dataset.mode=m;document.body.classList.toggle('party',/intro|blow|cut|done/.test(m));$('#step').textContent=STEP[m];
@@ -830,9 +834,6 @@ async function toggleAR() {
     ren.xr.setSession(session);
     toast('AR Mode Active! Point camera at surface and tap to place.');
 
-    let hitTestSource = null;
-    let hitTestSourceRequested = false;
-    
     const reticle = new T.Mesh(
       new T.RingGeometry(0.15, 0.2, 32).rotateX(-Math.PI / 2),
       new T.MeshBasicMaterial({ color: 0xffffff })
@@ -856,8 +857,6 @@ async function toggleAR() {
     session.addEventListener('end', () => {
       arSession = null;
       ren.xr.enabled = false;
-      hitTestSourceRequested = false;
-      hitTestSource = null;
       reticle.visible = false;
       sc.remove(reticle);
       sc.remove(controller);
@@ -1022,6 +1021,7 @@ async function boot(){
 
   build();
   sync();
+  rs();
   setMode(view?'intro':(saved?'idle':'edit'));
   
   if(document.fonts&&document.fonts.ready){
@@ -1030,6 +1030,8 @@ async function boot(){
     });
   }
   if(window.lucide) lucide.createIcons();
+  
+  ren.setAnimationLoop(tick);
 }
 
 boot();
